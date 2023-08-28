@@ -11,7 +11,8 @@ require("parallel")
 
 PARAM <- list()
 # reemplazar por las propias semillas
-PARAM$semillas <- c(102191, 200177, 410551, 552581, 892237)
+PARAM$semillas <- c(106703, 106721, 106727, 106739, 106747)
+
 
 #------------------------------------------------------------------------------
 # particionar agrega una columna llamada fold a un dataset
@@ -75,10 +76,10 @@ ArbolesMontecarlo <- function(semillas, param_basicos) {
   # la funcion mcmapply  llama a la funcion ArbolEstimarGanancia
   #  tantas veces como valores tenga el vector  ksemillas
   ganancias <- mcmapply(ArbolEstimarGanancia,
-    semillas, # paso el vector de semillas
+    PARAM$semillas, # paso el vector de semillas
     MoreArgs = list(param_basicos), # aqui paso el segundo parametro
     SIMPLIFY = FALSE,
-    mc.cores = 1
+    mc.cores = 5
   ) # se puede subir a 5 si posee Linux o Mac OS
 
   ganancia_promedio <- mean(unlist(ganancias))
@@ -89,11 +90,10 @@ ArbolesMontecarlo <- function(semillas, param_basicos) {
 #------------------------------------------------------------------------------
 
 # Aqui se debe poner la carpeta de la computadora local
-setwd("~/buckets/b1/") # Establezco el Working Directory
-# cargo los datos
+setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
 
 # cargo los datos
-dataset <- fread("./datasets/dataset_pequeno.csv")
+dataset <- fread("./datasets/competencia_01.csv")
 
 # trabajo solo con los datos con clase, es decir 202107
 dataset <- dataset[clase_ternaria != ""]
@@ -114,35 +114,51 @@ cat(
   sep = "",
   "max_depth", "\t",
   "min_split", "\t",
+  "cp", "\t",
+  "min_bucket", "\t",
   "ganancia_promedio", "\n"
 )
 
-
 # itero por los loops anidados para cada hiperparametro
+# for (vmax_depth in c(4, 6, 8, 10, 12, 14)) {
+#   for (vmin_split in c(1000, 800, 600, 400, 200, 100, 50, 20, 10)) {
 
-for (vmax_depth in c(4, 6, 8, 10, 12, 14)) {
-  for (vmin_split in c(1000, 800, 600, 400, 200, 100, 50, 20, 10)) {
-    # notar como se agrega
+i = 0 
 
-    # vminsplit  minima cantidad de registros en un nodo para hacer el split
-    param_basicos <- list(
-      "cp" = -0.5, # complejidad minima
-      "minsplit" = vmin_split,
-      "minbucket" = 5, # minima cantidad de registros en una hoja
-      "maxdepth" = vmax_depth
-    ) # profundidad máxima del arbol
+for (vmax_depth in c(4, 6)) {
+  for (vmin_split in c(1000, 10)) {
+    for (vcp in c(-1, 1)) {
+      for (vmin_bucket in c(5, 10)) {
+        # notar como se agrega
 
-    # Un solo llamado, con la semilla 17
-    ganancia_promedio <- ArbolesMontecarlo(ksemillas, param_basicos)
+        # vminsplit  minima cantidad de registros en un nodo para hacer el split
+        param_basicos <- list(
+          "cp" = vcp, # complejidad minima
+          "minsplit" = vmin_split,
+          "minbucket" = vmin_bucket, # minima cantidad de registros en una hoja
+          "maxdepth" = vmax_depth
+        ) # profundidad máxima del arbol
 
-    # escribo los resultados al archivo de salida
-    cat(
-      file = archivo_salida,
-      append = TRUE,
-      sep = "",
-      vmax_depth, "\t",
-      vmin_split, "\t",
-      ganancia_promedio, "\n"
-    )
+        # Un solo llamado, con la semilla 17
+        ganancia_promedio <- ArbolesMontecarlo(ksemillas, param_basicos)
+
+        # escribo los resultados al archivo de salida
+        cat(
+          file = archivo_salida,
+          append = TRUE,
+          sep = "",
+          vmax_depth, "\t",
+          vcp, "\t",
+          vmin_bucket, "\t",
+          ganancia_promedio, "\n"
+        )
+        timestamp <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
+        
+        print (paste(timestamp, "- Iteración", i))
+        i <- i + 1
+      }
+    }
   }
+
 }
+

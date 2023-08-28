@@ -39,7 +39,7 @@ setwd("/Users/mkiszkurno/Documents/dmeyf/")
 
 # cargo los datos
 dataset <- fread("./datasets/competencia_01.csv")
-setorder(dataset,mtarjeta_visa_descuentos )
+#setorder(dataset,mtarjeta_visa_descuentos )
 
 # trabajo solo con los datos con clase, es decir 202103
 dataset <- dataset[ foto_mes==202103 ]
