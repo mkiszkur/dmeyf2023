@@ -17,15 +17,62 @@ dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 
 # genero el modelo,  aqui se construye el arbol
 # quiero predecir clase_ternaria a partir de el resto de las variables
+
+# #Primer Intento
+# modelo <- rpart(
+#         formula = "clase_ternaria ~ .",
+#         data = dtrain, # los datos donde voy a entrenar
+#         xval = 0,
+#         cp = 0, # esto significa no limitar la complejidad de los splits
+#         minsplit = 600 , # minima cantidad de registros para que se haga el split
+#         minbucket = 1, # tamaño minimo de una hoja
+#         maxdepth = 14
+# ) # profundidad maxima del arbol
+
+
+# #Segundo Resultado
+# modelo <- rpart(
+#   formula = "clase_ternaria ~ .",
+#   data = dtrain, # los datos donde voy a entrenar
+#   xval = 0,
+#   "cp" = -1, # complejidad minima
+#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 5, # minima cantidad de registros en una hoja
+#   "maxdepth" = 10
+# ) # profundidad máxima del arbol
+
+# #Tercer Resultado
+# modelo <- rpart(
+#   formula = "clase_ternaria ~ .",
+#   data = dtrain, # los datos donde voy a entrenar
+#   xval = 0,
+#   "cp" = -0,5, # complejidad minima
+#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 5, # minima cantidad de registros en una hoja
+#   "maxdepth" = 10
+# ) # profundidad máxima del arbol
+
+#Cuarto Resultado
 modelo <- rpart(
-        formula = "clase_ternaria ~ .",
-        data = dtrain, # los datos donde voy a entrenar
-        xval = 0,
-        cp = -0.3, # esto significa no limitar la complejidad de los splits
-        minsplit = 0, # minima cantidad de registros para que se haga el split
-        minbucket = 1, # tamaño minimo de una hoja
-        maxdepth = 3
-) # profundidad maxima del arbol
+  formula = "clase_ternaria ~ .",
+  data = dtrain, # los datos donde voy a entrenar
+  xval = 0,
+  "cp" = 0, # complejidad minima
+  "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
+  "minbucket" = 1, # minima cantidad de registros en una hoja
+  "maxdepth" = 14
+) # profundidad máxima del arbol
+
+# #Quinto Resultado
+# modelo <- rpart(
+#   formula = "clase_ternaria ~ .",
+#   data = dtrain, # los datos donde voy a entrenar
+#   xval = 0,
+#   "cp" = 0, # complejidad minima
+#   "minsplit" = 200, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 1, # minima cantidad de registros en una hoja
+#   "maxdepth" = 8
+# ) # profundidad máxima del arbol
 
 
 # grafico el arbol

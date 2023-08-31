@@ -87,12 +87,46 @@ dataset <- fread("./datasets/competencia_01.csv")
 dataset <- dataset[foto_mes==202103]
 
 
+# #Primer Resultado
+# param_basicos <- list(
+#   "cp" = 0, # complejidad minima
+#   "minsplit" = 600, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 1, # minima cantidad de registros en una hoja
+#   "maxdepth" = 14
+# ) # profundidad máxima del arbol
+
+# #Segundo Resultado
+# param_basicos <- list(
+#   "cp" = -1, # complejidad minima
+#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 5, # minima cantidad de registros en una hoja
+#   "maxdepth" = 10
+# ) # profundidad máxima del arbol
+
+# #Tercer Resultado
+# param_basicos <- list(
+#   "cp" = -0,5, # complejidad minima
+#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 5, # minima cantidad de registros en una hoja
+#   "maxdepth" = 10
+# ) # profundidad máxima del arbol
+
+# #Cuarto Resultado
+# param_basicos <- list(
+#   "cp" = 0, # complejidad minima
+#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 1, # minima cantidad de registros en una hoja
+#   "maxdepth" = 14
+# ) # profundidad máxima del arbol
+
+#Quinto Resultado
 param_basicos <- list(
-  "cp" = -1, # complejidad minima
-  "minsplit" = 900, # minima cant de registros en un nodo para hacer el split
-  "minbucket" = 440, # minima cantidad de registros en una hoja
-  "maxdepth" = 5
+  "cp" = 0, # complejidad minima
+  "minsplit" = 200, # minima cant de registros en un nodo para hacer el split
+  "minbucket" = 1, # minima cantidad de registros en una hoja
+  "maxdepth" = 8
 ) # profundidad máxima del arbol
+
 
 # Un solo llamado, con la semilla 17
 ArbolEstimarGanancia(17, param_basicos)
@@ -104,7 +138,7 @@ salidas <- mcmapply(ArbolEstimarGanancia,
   PARAM$semillas, # paso el vector de semillas
   MoreArgs = list(param_basicos), # aqui paso el segundo parametro
   SIMPLIFY = FALSE,
-  mc.cores = 1
+  mc.cores = 5
 ) # se puede subir a 5 si posee Linux o Mac OS
 
 # muestro la lista de las salidas en testing
