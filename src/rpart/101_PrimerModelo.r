@@ -18,12 +18,12 @@ dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 # genero el modelo,  aqui se construye el arbol
 # quiero predecir clase_ternaria a partir de el resto de las variables
 
-##Voy a generar variaciones pequenas del modelo reduciendo los datos. Saco el 3%
+##Voy a generar variaciones pequenas del modelo reduciendo los datos. Saco el 5%
 # Define el porcentaje de datos que deseas retener
 
 cat("# filas de dtrain es:", nrow(dtrain), "\n")
 
-porcentaje_retencion <- 0.97
+porcentaje_retencion <- 0.95
 
 # Calcula el número de filas que representan el 98% del dataset
 num_filas_retencion <- round(nrow(dtrain) * porcentaje_retencion)
