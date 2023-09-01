@@ -56,7 +56,7 @@ ArbolEstimarGanancia <- function(semilla, param_basicos) {
   # cada columna es el vector de probabilidades
 
 
-  # calculo la ganancia en testing  qu es fold==2
+  # calculo la ganancia en testing  que es fold==2
   ganancia_test <- dataset[
     fold == 2,
     sum(ifelse(prediccion[, "BAJA+2"] > 0.025,
@@ -125,10 +125,10 @@ cat(
 
 i = 0 
 
-for (vmax_depth in c(4, 6)) {
-  for (vmin_split in c(1000, 10)) {
-    for (vcp in c(-1, 1)) {
-      for (vmin_bucket in c(5, 10)) {
+for (vmax_depth in c(4, 6, 8, 10, 12, 14)) {
+  for (vmin_split in c(1000, 800, 600, 400, 200, 100, 50, 20, 10)) {
+    for (vcp in c(-1, -0.5, 0, 0.01, 0.05, 0.10, 0.25, 0.50, 0.75, 1)) {
+      for (vmin_bucket in c(1, 5, 10, 15,20, 25, 30, 50, 100)) {
         # notar como se agrega
 
         # vminsplit  minima cantidad de registros en un nodo para hacer el split
@@ -148,6 +148,7 @@ for (vmax_depth in c(4, 6)) {
           append = TRUE,
           sep = "",
           vmax_depth, "\t",
+          vmin_split, "\t",
           vcp, "\t",
           vmin_bucket, "\t",
           ganancia_promedio, "\n"

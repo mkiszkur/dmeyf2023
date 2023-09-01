@@ -46,22 +46,22 @@ dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 #   formula = "clase_ternaria ~ .",
 #   data = dtrain, # los datos donde voy a entrenar
 #   xval = 0,
-#   "cp" = -0,5, # complejidad minima
+#   "cp" = -0.5, # complejidad minima
 #   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
 #   "minbucket" = 5, # minima cantidad de registros en una hoja
 #   "maxdepth" = 10
 # ) # profundidad máxima del arbol
 
-#Cuarto Resultado
-modelo <- rpart(
-  formula = "clase_ternaria ~ .",
-  data = dtrain, # los datos donde voy a entrenar
-  xval = 0,
-  "cp" = 0, # complejidad minima
-  "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
-  "minbucket" = 1, # minima cantidad de registros en una hoja
-  "maxdepth" = 14
-) # profundidad máxima del arbol
+# #Cuarto Resultado
+# modelo <- rpart(
+#   formula = "clase_ternaria ~ .",
+#   data = dtrain, # los datos donde voy a entrenar
+#   xval = 0,
+#   "cp" = 0, # complejidad minima
+#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
+#   "minbucket" = 1, # minima cantidad de registros en una hoja
+#   "maxdepth" = 14
+# ) # profundidad máxima del arbol
 
 # #Quinto Resultado
 # modelo <- rpart(
