@@ -18,14 +18,14 @@ dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 # genero el modelo,  aqui se construye el arbol
 # quiero predecir clase_ternaria a partir de el resto de las variables
 
-#Aumento los parametros del mejor modelo obtenido para escalar minbucket y minsplit en funcion de los datos reales de entrenamiento
+#Volvemos al que mejor me fue
 # #Primer Intento
 modelo <- rpart(
         formula = "clase_ternaria ~ .",
         data = dtrain, # los datos donde voy a entrenar
         xval = 0,
         cp = 0, # esto significa no limitar la complejidad de los splits
-        minsplit = 857 , # minima cantidad de registros para que se haga el split
+        minsplit = 600 , # minima cantidad de registros para que se haga el split
         minbucket = 1, # tamaño minimo de una hoja
         maxdepth = 14
 ) # profundidad maxima del arbol
