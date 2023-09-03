@@ -23,18 +23,18 @@ dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 
 cat("# filas de dtrain es:", nrow(dtrain), "\n")
 
-# porcentaje_retencion <- 0.93
-# 
-# # Calcula el número de filas que representan el 98% del dataset
-# num_filas_retencion <- round(nrow(dtrain) * porcentaje_retencion)
-# 
-# # Utiliza la función sample para seleccionar aleatoriamente las filas
-# filas_seleccionadas <- sample(1:nrow(dtrain), num_filas_retencion)
-# 
-# # Crea un nuevo dataframe con las filas seleccionadas
-# dtrain <- dtrain[filas_seleccionadas, ]
-# 
-# #Verifico cantidad de filas
+porcentaje_retencion <- 0.98
+
+# Calcula el número de filas que representan el 98% del dataset
+num_filas_retencion <- round(nrow(dtrain) * porcentaje_retencion)
+
+# Utiliza la función sample para seleccionar aleatoriamente las filas
+filas_seleccionadas <- sample(1:nrow(dtrain), num_filas_retencion)
+
+# Crea un nuevo dataframe con las filas seleccionadas
+dtrain <- dtrain[filas_seleccionadas, ]
+
+#Verifico cantidad de filas
 cat("# filas de dtrain es:", nrow(dtrain), "\n")
 
 
