@@ -23,32 +23,32 @@ dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 
 cat("# filas de dtrain es:", nrow(dtrain), "\n")
 
-porcentaje_retencion <- 0.93
-
-# Calcula el número de filas que representan el 98% del dataset
-num_filas_retencion <- round(nrow(dtrain) * porcentaje_retencion)
-
-# Utiliza la función sample para seleccionar aleatoriamente las filas
-filas_seleccionadas <- sample(1:nrow(dtrain), num_filas_retencion)
-
-# Crea un nuevo dataframe con las filas seleccionadas
-dtrain <- dtrain[filas_seleccionadas, ]
-
-#Verifico cantidad de filas
+# porcentaje_retencion <- 0.93
+# 
+# # Calcula el número de filas que representan el 98% del dataset
+# num_filas_retencion <- round(nrow(dtrain) * porcentaje_retencion)
+# 
+# # Utiliza la función sample para seleccionar aleatoriamente las filas
+# filas_seleccionadas <- sample(1:nrow(dtrain), num_filas_retencion)
+# 
+# # Crea un nuevo dataframe con las filas seleccionadas
+# dtrain <- dtrain[filas_seleccionadas, ]
+# 
+# #Verifico cantidad de filas
 cat("# filas de dtrain es:", nrow(dtrain), "\n")
 
 
 
-#Volvemos al que mejor me fue
+#El mejor de la primera busqueda BO (Bayes optimization)
 # #Primer Intento
 modelo <- rpart(
         formula = "clase_ternaria ~ .",
         data = dtrain, # los datos donde voy a entrenar
         xval = 0,
-        cp = 0, # esto significa no limitar la complejidad de los splits
-        minsplit = 600 , # minima cantidad de registros para que se haga el split
-        minbucket = 1, # tamaño minimo de una hoja
-        maxdepth = 14
+        cp = -0.631012458736839, # esto significa no limitar la complejidad de los splits
+        minsplit = 948 , # minima cantidad de registros para que se haga el split
+        minbucket = 365, # tamaño minimo de una hoja
+        maxdepth = 6
 ) # profundidad maxima del arbol
 
 
