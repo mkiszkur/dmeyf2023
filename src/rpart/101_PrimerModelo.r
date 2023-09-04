@@ -15,120 +15,137 @@ dataset <- fread("./datasets/competencia_01.csv")
 dtrain <- dataset[foto_mes == 202103] # defino donde voy a entrenar
 dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 
-# genero el modelo,  aqui se construye el arbol
-# quiero predecir clase_ternaria a partir de el resto de las variables
+particionar <- function(data, division, agrupa = "", campo = "fold", start = 1, seed = NA) {
+  if (!is.na(seed)) set.seed(seed)
+  
+  bloque <- unlist(mapply(function(x, y) {
+    rep(y, x)
+  }, division, seq(from = start, length.out = length(division))))
+  
+  data[, (campo) := sample(rep(bloque, ceiling(.N / length(bloque))))[1:.N],
+       by = agrupa
+  ]
+}
 
-##Voy a generar variaciones pequenas del modelo reduciendo los datos. Saco el 7%
-# Define el porcentaje de datos que deseas retener
+predecir <- function(modelo, nm_archivo) {
+  
+  # aplico el modelo a los datos nuevos
+  prediccion <- predict(
+    object = modelo,
+    newdata = dapply,
+    type = "prob"
+  )
+  
+  # prediccion es una matriz con TRES columnas,
+  # llamadas "BAJA+1", "BAJA+2"  y "CONTINUA"
+  # cada columna es el vector de probabilidades
+  
+  # agrego a dapply una columna nueva que es la probabilidad de BAJA+2
+  dapply[, prob_baja2 := prediccion[, "BAJA+2"]]
+  
+  # solo le envio estimulo a los registros
+  #  con probabilidad de BAJA+2 mayor  a  1/40
+  dapply[, Predicted := as.numeric(prob_baja2 > 1 / 40)]
+  
+  # genero el archivo para Kaggle
+  # primero creo la carpeta donde va el experimento
+  dir.create("./exp/")
+  dir.create("./exp/KA2001")
+  
+  # solo los campos para Kaggle
+  fwrite(dapply[, list(numero_de_cliente, Predicted)],
+         file = nm_archivo,
+         sep = ","
+  )
+  
+}
 
-cat("# filas de dtrain es:", nrow(dtrain), "\n")
-
-porcentaje_retencion <- 0.95
-
-# Calcula el número de filas que representan el 98% del dataset
-num_filas_retencion <- round(nrow(dtrain) * porcentaje_retencion)
-
-# Utiliza la función sample para seleccionar aleatoriamente las filas
-filas_seleccionadas <- sample(1:nrow(dtrain), num_filas_retencion)
-
-# Crea un nuevo dataframe con las filas seleccionadas
-dtrain <- dtrain[filas_seleccionadas, ]
-
-#Verifico cantidad de filas
-cat("# filas de dtrain es:", nrow(dtrain), "\n")
+dtrain1 = copy(dtrain)
+dtrain2 = copy(dtrain)
+dtrain3 = copy(dtrain)
+dtrain4 = copy(dtrain)
+dtrain5 = copy(dtrain)
 
 
+particionar(dtrain1, division = c(5, 5), agrupa = "clase_ternaria", seed = 106703)
+particionar(dtrain2, division = c(5, 5), agrupa = "clase_ternaria", seed = 106721)
+particionar(dtrain3, division = c(5, 5), agrupa = "clase_ternaria", seed = 106727)
+particionar(dtrain4, division = c(5, 5), agrupa = "clase_ternaria", seed = 106739)
+particionar(dtrain5, division = c(5, 5), agrupa = "clase_ternaria", seed = 106747)
 
-#El mejor de la primera busqueda BO (Bayes optimization)
-# #Primer Intento
-modelo <- rpart(
-        formula = "clase_ternaria ~ .",
-        data = dtrain, # los datos donde voy a entrenar
-        xval = 0,
-        cp = -0.631012458736839, # esto significa no limitar la complejidad de los splits
-        minsplit = 948 , # minima cantidad de registros para que se haga el split
-        minbucket = 365, # tamaño minimo de una hoja
-        maxdepth = 6
+v_cp = -0.631012458736839
+v_minsplit = 948
+v_minbucket = 365
+v_maxdepth = 6
+
+
+modelo1 <- rpart(
+  formula = "clase_ternaria ~ .",
+  data = dtrain1[fold == 1], # los datos donde voy a entrenar
+  xval = 0,
+  cp = v_cp, # esto significa no limitar la complejidad de los splits
+  minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
+  minbucket = v_minbucket, # tamaño minimo de una hoja
+  maxdepth = v_maxdepth
 ) # profundidad maxima del arbol
 
-
-# #Segundo Resultado
-# modelo <- rpart(
-#   formula = "clase_ternaria ~ .",
-#   data = dtrain, # los datos donde voy a entrenar
-#   xval = 0,
-#   "cp" = -1, # complejidad minima
-#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
-#   "minbucket" = 5, # minima cantidad de registros en una hoja
-#   "maxdepth" = 10
-# ) # profundidad máxima del arbol
-
-# #Tercer Resultado
-# modelo <- rpart(
-#   formula = "clase_ternaria ~ .",
-#   data = dtrain, # los datos donde voy a entrenar
-#   xval = 0,
-#   "cp" = -0.5, # complejidad minima
-#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
-#   "minbucket" = 5, # minima cantidad de registros en una hoja
-#   "maxdepth" = 10
-# ) # profundidad máxima del arbol
-
-# #Cuarto Resultado
-# modelo <- rpart(
-#   formula = "clase_ternaria ~ .",
-#   data = dtrain, # los datos donde voy a entrenar
-#   xval = 0,
-#   "cp" = 0, # complejidad minima
-#   "minsplit" = 400, # minima cant de registros en un nodo para hacer el split
-#   "minbucket" = 1, # minima cantidad de registros en una hoja
-#   "maxdepth" = 14
-# ) # profundidad máxima del arbol
-
-# #Quinto Resultado
-# modelo <- rpart(
-#   formula = "clase_ternaria ~ .",
-#   data = dtrain, # los datos donde voy a entrenar
-#   xval = 0,
-#   "cp" = 0, # complejidad minima
-#   "minsplit" = 200, # minima cant de registros en un nodo para hacer el split
-#   "minbucket" = 1, # minima cantidad de registros en una hoja
-#   "maxdepth" = 8
-# ) # profundidad máxima del arbol
-
-
 # grafico el arbol
-prp(modelo,
-        extra = 101, digits = -5,
-        branch = 1, type = 4, varlen = 0, faclen = 0
+prp(modelo1,
+    extra = 101, digits = -5,
+    branch = 1, type = 4, varlen = 0, faclen = 0
 )
 
+predecir (modelo1, "./exp/KA2001/K101_001.csv")
 
-# aplico el modelo a los datos nuevos
-prediccion <- predict(
-        object = modelo,
-        newdata = dapply,
-        type = "prob"
-)
+modelo2 <- rpart(
+  formula = "clase_ternaria ~ .",
+  data = dtrain2[fold == 1], # los datos donde voy a entrenar
+  xval = 0,
+  cp = v_cp, # esto significa no limitar la complejidad de los splits
+  minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
+  minbucket = v_minbucket, # tamaño minimo de una hoja
+  maxdepth = v_maxdepth
+) # profundidad maxima del arbol
 
-# prediccion es una matriz con TRES columnas,
-# llamadas "BAJA+1", "BAJA+2"  y "CONTINUA"
-# cada columna es el vector de probabilidades
+predecir (modelo2, "./exp/KA2001/K101_002.csv")
 
-# agrego a dapply una columna nueva que es la probabilidad de BAJA+2
-dapply[, prob_baja2 := prediccion[, "BAJA+2"]]
+modelo3 <- rpart(
+  formula = "clase_ternaria ~ .",
+  data = dtrain3[fold == 1], # los datos donde voy a entrenar
+  xval = 0,
+  cp = v_cp, # esto significa no limitar la complejidad de los splits
+  minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
+  minbucket = v_minbucket, # tamaño minimo de una hoja
+  maxdepth = v_maxdepth
+) # profundidad maxima del arbol
 
-# solo le envio estimulo a los registros
-#  con probabilidad de BAJA+2 mayor  a  1/40
-dapply[, Predicted := as.numeric(prob_baja2 > 1 / 40)]
+predecir (modelo3, "./exp/KA2001/K101_003.csv")
 
-# genero el archivo para Kaggle
-# primero creo la carpeta donde va el experimento
-dir.create("./exp/")
-dir.create("./exp/KA2001")
+modelo4 <- rpart(
+  formula = "clase_ternaria ~ .",
+  data = dtrain4[fold == 1], # los datos donde voy a entrenar
+  xval = 0,
+  cp = v_cp, # esto significa no limitar la complejidad de los splits
+  minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
+  minbucket = v_minbucket, # tamaño minimo de una hoja
+  maxdepth = v_maxdepth
+) # profundidad maxima del arbol
 
-# solo los campos para Kaggle
-fwrite(dapply[, list(numero_de_cliente, Predicted)],
-        file = "./exp/KA2001/K101_001.csv",
-        sep = ","
-)
+predecir (modelo4, "./exp/KA2001/K101_004.csv")
+
+modelo5 <- rpart(
+  formula = "clase_ternaria ~ .",
+  data = dtrain5[fold == 1], # los datos donde voy a entrenar
+  xval = 0,
+  cp = v_cp, # esto significa no limitar la complejidad de los splits
+  minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
+  minbucket = v_minbucket, # tamaño minimo de una hoja
+  maxdepth = v_maxdepth
+) # profundidad maxima del arbol
+
+predecir (modelo5, "./exp/KA2001/K101_005.csv")
+
+
+
+
+
