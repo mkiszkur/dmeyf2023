@@ -75,10 +75,31 @@ particionar(dtrain3, division = c(5, 5), agrupa = "clase_ternaria", seed = 10672
 particionar(dtrain4, division = c(5, 5), agrupa = "clase_ternaria", seed = 106739)
 particionar(dtrain5, division = c(5, 5), agrupa = "clase_ternaria", seed = 106747)
 
-v_cp = -1
-v_minsplit = 400
-v_minbucket = 5
-v_maxdepth = 10
+v_cp = -0.633812091658346
+v_minsplit = 701
+v_minbucket = 100
+v_maxdepth = 6
+
+
+#Con todos
+modelo <- rpart(
+  formula = "clase_ternaria ~ .",
+  data = dtrain, # los datos donde voy a entrenar
+  xval = 0,
+  cp = v_cp, # esto significa no limitar la complejidad de los splits
+  minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
+  minbucket = v_minbucket, # tamaño minimo de una hoja
+  maxdepth = v_maxdepth
+) # profundidad maxima del arbol
+
+# grafico el arbol
+prp(modelo1,
+    extra = 101, digits = -5,
+    branch = 1, type = 4, varlen = 0, faclen = 0
+)
+
+predecir (modelo1, "./exp/KA2001/K101_000.csv")
+
 
 
 modelo1 <- rpart(
