@@ -14,6 +14,8 @@ dataset <- fread("./datasets/competencia_01.csv")
 
 dtrain <- dataset[foto_mes == 202103] # defino donde voy a entrenar
 dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
+dapply[, fold := 2]
+
 
 particionar <- function(data, division, agrupa = "", campo = "fold", start = 1, seed = NA) {
   if (!is.na(seed)) set.seed(seed)
@@ -73,10 +75,10 @@ particionar(dtrain3, division = c(5, 5), agrupa = "clase_ternaria", seed = 10672
 particionar(dtrain4, division = c(5, 5), agrupa = "clase_ternaria", seed = 106739)
 particionar(dtrain5, division = c(5, 5), agrupa = "clase_ternaria", seed = 106747)
 
-v_cp = -0.631012458736839
-v_minsplit = 948
-v_minbucket = 365
-v_maxdepth = 6
+v_cp = -1
+v_minsplit = 400
+v_minbucket = 5
+v_maxdepth = 10
 
 
 modelo1 <- rpart(
