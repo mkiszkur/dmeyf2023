@@ -25,7 +25,7 @@ PARAM <- list()
 PARAM$experimento <- "HT3990"
 
 # cantidad de iteraciones de la Optimizacion Bayesiana
-PARAM$BO_iter <- 24  # iteraciones inteligentes   24= 40 - 4*4
+PARAM$BO_iter <- 24  # iteraciones inteligentes   24 = 40 - 4*4
 
 #  de los hiperparametros
 PARAM$hs <- makeParamSet(
@@ -37,7 +37,7 @@ PARAM$hs <- makeParamSet(
 )
 # minbuket NO PUEDE ser mayor que la mitad de minsplit
 
-# PARAM$semilla_azar <- 106703 # primer semilla de Federico
+# PARAM$semilla_azar <- 106703
 PARAM$semilla_azar <- 270001 # primer semilla de Federico
 
 #------------------------------------------------------------------------------
@@ -190,9 +190,6 @@ dataset[ , clase_binaria := ifelse( clase_ternaria=="CONTINUA", "NEG", "POS" ) ]
 dtrain <- dataset[foto_mes==202103]
 dapply <- dataset[foto_mes==202105]
 
-
-
-
 # definicion vector de pesos para oversampling
 pesos <- copy( dtrain[, ifelse( clase_ternaria=="CONTINUA",   1.0, 100.0  ) ] )
 
@@ -268,4 +265,3 @@ if (!file.exists(archivo_BO)) {
   run <- mboContinue(archivo_BO)
 }
 # retomo en caso que ya exista
-#  6087618
