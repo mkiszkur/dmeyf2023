@@ -11,7 +11,7 @@ def ftirar(prob, qty):
 
 
 # defino las jugadoras
-jugadoras = [0.7] * 100
+jugadoras = [0.685] * 100
 
 
 # vectorizo la funcion  ftirar

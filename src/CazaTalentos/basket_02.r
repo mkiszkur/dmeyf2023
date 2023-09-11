@@ -11,15 +11,11 @@ ftirar <- function(prob, qty) {
 
 
 # defino los jugadores
-mejor <- 0.8
-peloton <- c(rep(790:742,2),741) / 1000
 
-jugadoras <- c(mejor, peloton)
+jugadoras <- c(rep(70, 100) / 1000)
 
-# veo que tiene el vector
-jugadoras
 
-cant_tiros = 100
+cant_tiros <- 100
 
 
 # hago que los 100 jugadores tiren 10 veces cada uno
