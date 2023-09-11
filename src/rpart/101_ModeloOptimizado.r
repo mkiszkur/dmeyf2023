@@ -14,15 +14,10 @@ setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
 # cargo el dataset
 dataset <- fread("./datasets/competencia_01.csv")
 
-dataset <- dataset %>%
-  mutate(
-    qcspp = (ctrx_quarter < 18) & (mcuentas_saldo < -1388.2) & (mprestamos_personales < 6627.8)
-  )
-
-
 dtrain <- dataset[foto_mes == 202103] # defino donde voy a entrenar
 dapply <- dataset[foto_mes == 202105] # defino donde voy a aplicar el modelo
 dapply[, fold := 2]
+
 
 
 particionar <- function(data, division, agrupa = "", campo = "fold", start = 1, seed = NA) {
@@ -85,10 +80,10 @@ particionar(dtrain4, division = c(5, 5), agrupa = "clase_ternaria", seed = 10673
 dtrain5 = copy(dtrain)
 particionar(dtrain5, division = c(5, 5), agrupa = "clase_ternaria", seed = 106747)
 
-v_cp = -0.633812091658346
-v_minsplit = 701
-v_minbucket = 100
-v_maxdepth = 6
+v_cp = -1
+v_minsplit = 1490
+v_minbucket = 696
+v_maxdepth = 11
 
 #Arbol de 3 niveles
 modelo_3_niveles <- rpart(
@@ -132,8 +127,6 @@ prp(modelo_todos,
 
 predecir (modelo_todos, "./exp/KA2001/K101_000_t.csv")
 
-
-
 modelo1 <- rpart(
   formula = "clase_ternaria ~ .",
   data = dtrain1[fold == 1], # los datos donde voy a entrenar
@@ -160,7 +153,7 @@ modelo2 <- rpart(
   minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
   minbucket = v_minbucket, # tamaño minimo de una hoja
   maxdepth = v_maxdepth
-) # profundidad maxima del arbol
+  ) # profundidad maxima del arbol
 
 predecir (modelo2, "./exp/KA2001/K101_002.csv")
 
@@ -172,6 +165,7 @@ modelo3 <- rpart(
   minsplit = v_minsplit , # minima cantidad de registros para que se haga el split
   minbucket = v_minbucket, # tamaño minimo de una hoja
   maxdepth = v_maxdepth
+
 ) # profundidad maxima del arbol
 predecir (modelo3, "./exp/KA2001/K101_003.csv")
 
