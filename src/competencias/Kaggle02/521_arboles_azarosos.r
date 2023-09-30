@@ -14,7 +14,7 @@ PARAM <- list()
 PARAM$experimento <- 5210
 
 # Establezco la semilla aleatoria, cambiar por SU primer semilla
-PARAM$semilla <- 102191
+PARAM$semilla <- 106703
 
 # parameetros rpart
 PARAM$rpart_param <- list(
@@ -32,11 +32,29 @@ PARAM$feature_fraction <- 0.5
 #  pero ganancias marginales
 PARAM$num_trees_max <- 500
 
+#setwd("~/buckets/b1/") # Establezco el Working Directory
+setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
+
+
+#---- Preparacion
+source("~/Documents/dmeyf/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
+
+EJEC <- list()
+EJEC$nombre_archivo = "./ejecuciones/log_corridas.csv"
+EJEC$fuente = "521_arboles_azarosos.r"
+
+EJEC = iniciar_corrida (EJEC)
+
+paste(EJEC$inicio, EJEC$corrida, "Inicio", EJEC$fuente, ",")
+
+
+#Por si quiero probar los logs
+#stop("mensaje_error")
+
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Aqui comienza el programa
 
-setwd("~/buckets/b1/") # Establezco el Working Directory
 
 # cargo los datos
 dataset <- fread("./datasets/competencia_02.csv.gz")
@@ -51,10 +69,8 @@ dir.create(paste0("./exp/KA", PARAM$experimento, "/"),
 
 setwd(carpeta_experimento)
 
-
 # que tamanos de ensemble grabo a disco, pero siempre debo generar los 500
 grabar <- c(1, 5, 10, 50, 100, 200, 500)
-
 
 # defino los dataset de entrenamiento y aplicacion
 dtrain <- dataset[foto_mes == 202105]
@@ -73,7 +89,6 @@ dapply[, prob_acumulada := 0]
 # Establezco cuales son los campos que puedo usar para la prediccion
 # el copy() es por la Lazy Evaluation
 campos_buenos <- copy(setdiff(colnames(dtrain), c("clase_ternaria")))
-
 
 
 # Genero las salidas
@@ -126,3 +141,8 @@ for (arbolito in 1:PARAM$num_trees_max) {
     cat(arbolito, " ")
   }
 }
+
+# Cerrar el archivo
+EJEC = finalizar_corrida (EJEC)
+
+
