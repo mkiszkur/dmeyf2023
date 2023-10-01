@@ -32,12 +32,13 @@ PARAM$feature_fraction <- 0.5
 #  pero ganancias marginales
 PARAM$num_trees_max <- 500
 
-#setwd("~/buckets/b1/") # Establezco el Working Directory
-setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
+setwd("~/buckets/b1/") # Establezco el Working Directory
+#setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
 
 
 #---- Preparacion
-source("~/Documents/dmeyf/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
+#source("~/Documents/dmeyf/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
+source("/home/miguel_kiszkurno/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
 
 EJEC <- list()
 EJEC$nombre_archivo = "./ejecuciones/log_corridas.csv"
@@ -58,7 +59,6 @@ paste(EJEC$inicio, EJEC$corrida, "Inicio", EJEC$fuente, ",")
 
 # cargo los datos
 dataset <- fread("./datasets/competencia_02.csv.gz")
-
 
 # creo la carpeta donde va el experimento
 dir.create("./exp/", showWarnings = FALSE)
