@@ -50,8 +50,8 @@ paste(EJEC$inicio, EJEC$corrida, "Inicio", EJEC$fuente, ",")
 
 
 #Por si quiero probar los logs
-EJEC = finalizar_corrida (EJEC)
-stop("mensaje_error")
+#EJEC = finalizar_corrida (EJEC)
+#stop("mensaje_error")
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
