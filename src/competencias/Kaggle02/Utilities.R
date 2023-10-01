@@ -8,7 +8,7 @@ sumar <- function(a, b) {
 finalizar_corrida <- function(EJEC){
   
   EJEC$fin <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  linea <- paste(EJEC$fin, EJEC$corrida, "finalizacion", EJEC$fuente, , EJEC$nombre_maquina, sep = SEPARADOR)
+  linea <- paste(EJEC$fin, EJEC$corrida, "finalizacion", EJEC$fuente, EJEC$nombre_maquina, sep = SEPARADOR)
   cat(linea, file = EJEC$archivo_log, "\n")
   
   close(EJEC$archivo_log)
