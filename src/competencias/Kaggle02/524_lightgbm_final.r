@@ -1,3 +1,4 @@
+# Corrida Nro 6: USando lightgbm_final.r y maquina de google cloud
 # para correr el Google Cloud
 #   8 vCPU
 #  16 GB memoria RAM
