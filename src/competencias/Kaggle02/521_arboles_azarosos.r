@@ -32,19 +32,27 @@ PARAM$feature_fraction <- 0.5
 #  pero ganancias marginales
 PARAM$num_trees_max <- 500
 
-setwd("~/buckets/b1/") # Establezco el Working Directory
-#setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
 
 
 #---- Preparacion
-#source("~/Documents/dmeyf/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
-source("/home/miguel_kiszkurno/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
 
 EJEC <- list()
 EJEC$nombre_archivo = "./ejecuciones/log_corridas.csv"
 EJEC$fuente = "521_arboles_azarosos.r"
 
+#definir si es en google cloud o en la maquina local
+EJEC$tipo_ejecicion = 'local'
+if (EJEC$tipo_ejecicion == 'local') {
+  source("~/Documents/dmeyf/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
+  setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
+}else {
+  setwd("~/buckets/b1/") # Establezco el Working Directory
+  source("/home/miguel_kiszkurno/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
+}
+
 EJEC = iniciar_corrida (EJEC)
+
+
 
 paste(EJEC$inicio, EJEC$corrida, "Inicio", EJEC$fuente, ",")
 
