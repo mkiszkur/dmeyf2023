@@ -8,7 +8,7 @@ sumar <- function(a, b) {
 finalizar_corrida <- function(EJEC){
   
   EJEC$fin <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
-  linea <- paste(EJEC$fin, EJEC$corrida, "finalizacion", EJEC$fuente, sep = SEPARADOR)
+  linea <- paste(EJEC$fin, EJEC$corrida, "finalizacion", EJEC$fuente, , EJEC$nombre_maquina, sep = SEPARADOR)
   cat(linea, file = EJEC$archivo_log, "\n")
   
   close(EJEC$archivo_log)
@@ -19,7 +19,10 @@ iniciar_corrida <- function(EJEC){
   
   #Crea el directorio de ejecuciones
   dir.create("./ejecuciones/", showWarnings = FALSE)
-
+  
+  system_info <- Sys.info()
+  EJEC$nombre_maquina = system_info["nodename"]
+  
   #Si no hay archivo de corridas lo crea  
   if (!file.exists(EJEC$nombre_archivo)) {
     # Si el archivo no existe, crearlo y establecer la corrida inicial en 1
@@ -40,7 +43,7 @@ iniciar_corrida <- function(EJEC){
   EJEC$inicio <- format(Sys.time(), "%Y-%m-%d %H:%M:%S")
   
   # Componer la línea a escribir en el archivo
-  linea <- paste(EJEC$inicio, EJEC$corrida, "Inicio", EJEC$fuente, sep = SEPARADOR)
+  linea <- paste(EJEC$inicio, EJEC$corrida, "Inicio", EJEC$fuente, EJEC$nombre_maquina, sep = SEPARADOR)
   
   # Escribir la línea en el archivo
   cat(linea, file = EJEC$archivo_log, "\n")
