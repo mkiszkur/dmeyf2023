@@ -1,4 +1,4 @@
-# Corrida Nro 7: Hice algo de feature engineering. Vamos a ver como va.
+# Corrida Nro 8: Hice algo de feature engineering. Agregue mas columnas. Ventana de 6 meses
 # para correr el Google Cloud
 #   8 vCPU
 #  16 GB memoria RAM
