@@ -1,0 +1,5 @@
+cd src/competencias/Kaggle02
+python -m venv kaggle-02
+source kaggle-02/bin/activate
+pip install duckdb jupyterlab duckdb-engine pandas
+
