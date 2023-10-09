@@ -43,12 +43,14 @@ EJEC$fuente = "524_lightgbm_final.r"
 #definir si es en google cloud o en la maquina local
 #EJEC$frenar_corrida = TRUE
 EJEC$frenar_corrida = FALSE
-#EJEC$tipo_ejecicion = 'local'
-EJEC$tipo_ejecicion = 'Google Cloud'
+EJEC$tipo_ejecicion = 'local'
+#EJEC$tipo_ejecicion = 'Google Cloud'
 
 if (EJEC$tipo_ejecicion == 'local') {
   source("~/Documents/dmeyf/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
-  setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
+  #setwd("/Users/mkiszkurno/Documents/dmeyf/") # Establezco el Working Directory
+  setwd("/Users/miguelkiszkurno/Documents/dmeyf") 
+  
 }else {
   source("/home/miguel_kiszkurno/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
   setwd("~/buckets/b1/") # Establezco el Working Directory
