@@ -185,3 +185,7 @@ project/target
 
 #virtual env de competencia 2
 src/competencias/Kaggle02/kaggle-02/
+.Rproj.user
+src/competencias/Kaggle02/.RData
+src/competencias/Kaggle02/.Rhistory
+src/competencias/Kaggle02/.Rhistory
