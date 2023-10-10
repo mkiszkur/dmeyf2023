@@ -1,6 +1,4 @@
-# Corrida Nro 10: Igual a la corrida 8 pero con otra semilla.
-#   8 vCPU
-#  16 GB memoria RAM
+# Corrida Nro 9: Corremos con los parametros que dieron cerca del promedio de la bayesiana de 100 iteraciones
 
 
 # limpio la memoria
@@ -19,17 +17,16 @@ PARAM$experimento <- "KA5240"
 PARAM$input$dataset <- "./datasets/competencia_02.csv.gz"
 
 # meses donde se entrena el modelo
-PARAM$input$training <- c(202101, 202102, 202103, 202104, 202105)
+PARAM$input$training <- c(202010, 202011, 202012, 202101, 202102, 202103)
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 
 PARAM$finalmodel$semilla <- 106721
 
-PARAM$finalmodel$num_iterations <- 4928
-PARAM$finalmodel$learning_rate <- 0.0189943331895954
-PARAM$finalmodel$feature_fraction <- 0.892623977897483
-PARAM$finalmodel$min_data_in_leaf <- 785
-PARAM$finalmodel$num_leaves <- 666
-
+PARAM$finalmodel$num_iterations <- 158
+PARAM$finalmodel$learning_rate <- 0.27443437716496
+PARAM$finalmodel$feature_fraction <- 0.556434156134297
+PARAM$finalmodel$num_leaves <- 1016
+PARAM$finalmodel$min_data_in_leaf <- 3105
 
 PARAM$finalmodel$max_bin <- 31
 
@@ -37,7 +34,7 @@ PARAM$finalmodel$max_bin <- 31
 #---- EJEC se utiliza para logear la ejecución:
 EJEC <- list()
 EJEC$nombre_archivo = "./ejecuciones/log_corridas.csv"
-EJEC$fuente = "524_lightgbm_final.r"
+EJEC$fuente = "524_lightgbm_Average_BO.r"
 
 #definir si es en google cloud o en la maquina local
 #EJEC$frenar_corrida = TRUE
