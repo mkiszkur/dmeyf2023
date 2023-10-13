@@ -2,6 +2,11 @@
 rm(list = ls()) # remove all objects
 gc() # garbage collection
 
+#install.packages("randomForest")
+library(randomForest)
+#install.packages("cluster")
+library(cluster)
+
 require("data.table")
 require("rlist")
 
@@ -19,7 +24,8 @@ PARAM <- list()
 
 PARAM$experimento <- "HT8280"
 
-PARAM$input$dataset <- "./datasets/competencia_02_recortado.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_02_1000.gz"
+#PARAM$input$dataset <- "./datasets/competencia_02_recortado.csv.gz"
 #PARAM$input$dataset <- "./datasets/competencia_02.csv.gz"
 #PARAM$input$dataset <- "./datasets/_6_meses_competencia_02.csv.gz"
 
@@ -29,48 +35,7 @@ PARAM$input$testing <- c(202105)
 PARAM$input$validation <- c(202104)
 PARAM$input$training <- c(202010, 202011, 202012, 202101, 202102, 202103)
 
-# un undersampling de 0.1  toma solo el 10% de los CONTINUA
-PARAM$trainingstrategy$undersampling <- 1.0
-PARAM$trainingstrategy$semilla_azar <- 106703 # Aqui poner su  primer  semilla
-
-PARAM$hyperparametertuning$POS_ganancia <- 273000
-PARAM$hyperparametertuning$NEG_ganancia <- -7000
-
-# Aqui poner su segunda semilla
-PARAM$lgb_semilla <- 106721
 #------------------------------------------------------------------------------
-
-#------------------------------------------------------------------------------
-# graba a un archivo los componentes de lista
-# para el primer registro, escribe antes los titulos
-
-loguear <- function(
-    reg, arch = NA, folder = "./exp/",
-    ext = ".txt", verbose = TRUE) {
-  archivo <- arch
-  if (is.na(arch)) archivo <- paste0(folder, substitute(reg), ext)
-
-  if (!file.exists(archivo)) # Escribo los titulos
-    {
-      linea <- paste0(
-        "fecha\t",
-        paste(list.names(reg), collapse = "\t"), "\n"
-      )
-
-      cat(linea, file = archivo)
-    }
-
-  linea <- paste0(
-    format(Sys.time(), "%Y%m%d %H%M%S"), "\t", # la fecha y hora
-    gsub(", ", "\t", toString(reg)), "\n"
-  )
-
-  cat(linea, file = archivo, append = TRUE) # grabo al archivo
-
-  if (verbose) cat(linea) # imprimo por pantalla
-}
- 
- 
 
 #---- EJEC se utiliza para logear la ejecución:
 EJEC <- list()
@@ -116,87 +81,68 @@ print(columnas)
 dir.create("./exp/", showWarnings = FALSE)
 dir.create(paste0("./exp/", PARAM$experimento, "/"), showWarnings = FALSE)
 
-# Establezco el Working Directory DEL EXPERIMENTO
-setwd(paste0("./exp/", PARAM$experimento, "/"))
+#Me quedo unicamente  con los baja+2
+dataset_baja_mas_2 = dataset[clase_ternaria == 'BAJA+2', ]
 
-#install.packages("randomForest")
-library(randomForest)
 
-#install.packages("cluster")
-library(cluster)
+# Contar el número de registros en el dataset filtrado
+num_registros <- nrow(dataset_baja_mas_2)
 
-rf.fit <- randomForest(x = dataset, y = NULL, ntree = 10000, proximity = TRUE, oob.prox = TRUE)
+# Imprimir el resultado
+cat("El dataset 'dataset_baja_mas_2' tiene", num_registros, "registros.\n")
+
+
+print(dataset_baja_mas_2[, .(numero_de_cliente, foto_mes)])
+
+
+#en dataset_filtrado los registros historicos de todos los baja+2
+dataset_filtrado <- dataset[numero_de_cliente %in% dataset_baja_mas_2$numero_de_cliente, ]
+print(dataset_filtrado[, .(numero_de_cliente, foto_mes)])
+
+
+#Veo que columnas tienen valores BA en dataset_baja_mas_2
+columnas_con_NA <- names(dataset_baja_mas_2)[colSums(is.na(dataset_baja_mas_2)) > 0]
+cat("Columnas con NA en dataset_baja_mas_2:\n")
+print(columnas_con_NA)
+
+# Recorrer cada columna y reemplazar valores nulos por cero
+for (col_name in columnas_con_NA) {
+  print(col_name)
+  dataset_baja_mas_2[is.na(.SD[[col_name]]), (col_name) := 0]
+}
+
+# # Crear un DataFrame con el nombre de la columna y la cantidad de NA en cada columna
+# resumen_na <- data.frame(
+#   Columna = colnames(dataset_baja_mas_2),
+#   NA_Cantidad = colSums(is.na(dataset_baja_mas_2))
+# )
+# resumen_na <- resumen_na[order(-resumen_na$NA_Cantidad), ]
+
+# # Imprimir el resumen
+# resumen_na
+
+rf.fit <- randomForest(x = dataset_baja_mas_2, y = NULL, ntree = 10000, proximity = TRUE, oob.prox = TRUE)
 hclust.rf <- hclust(as.dist(1-rf.fit$proximity), method = "ward.D2")
-rf.cluster = cutree(hclust.rf, k=3)
-iris.pc$rf.clusters <- rf.cluster
-table(rf.cluster, iris$Species)
+
+rf.cluster = cutree(hclust.rf, k=7)
 
 
+#iris.pc$rf.clusters <- rf.cluster
+#table(rf.cluster, iris$Species)
 
 #A veces quiero probar corridas sin entrenar
 if (EJEC$frenar_corrida) {
+  # libero espacio
+  rm(dataset)
+  gc()
   EJEC = finalizar_corrida (EJEC)
-  stop("mensaje_error")
+  stop("Finalizada por configuracion")
 }
-
-
-
-# paso la clase a binaria que tome valores {0,1}  enteros
-dataset[, clase01 := ifelse(clase_ternaria == "CONTINUA", 0L, 1L)]
-
-
-
-# defino los datos que forma parte del training
-# aqui se hace el undersampling de los CONTINUA
-set.seed(PARAM$trainingstrategy$semilla_azar)
-dataset[, azar := runif(nrow(dataset))]
-dataset[, training := 0L]
-dataset[
-  foto_mes %in% PARAM$input$training &
-    (azar <= PARAM$trainingstrategy$undersampling | clase_ternaria %in% c("BAJA+1", "BAJA+2")),
-  training := 1L
-]
-
-# dejo los datos en el formato que necesita LightGBM
-dtrain <- lgb.Dataset(
-  data = data.matrix(dataset[training == 1L, campos_buenos, with = FALSE]),
-  label = dataset[training == 1L, clase01],
-  weight = dataset[training == 1L, 
-    ifelse(clase_ternaria == "BAJA+2", 1.0000001, 
-      ifelse(clase_ternaria == "BAJA+1", 1.0, 1.0))],
-  free_raw_data = FALSE
-)
-
-
-
-# defino los datos que forman parte de validation
-#  no hay undersampling
-dataset[, validation := 0L]
-dataset[ foto_mes %in% PARAM$input$validation,  validation := 1L]
-
-dvalidate <- lgb.Dataset(
-  data = data.matrix(dataset[validation == 1L, campos_buenos, with = FALSE]),
-  label = dataset[validation == 1L, clase01],
-  weight = dataset[validation == 1L, 
-    ifelse(clase_ternaria == "BAJA+2", 1.0000001, 
-      ifelse(clase_ternaria == "BAJA+1", 1.0, 1.0))],
-  free_raw_data = FALSE
-)
-
-
-# defino los datos de testing
-dataset[, testing := 0L]
-dataset[ foto_mes %in% PARAM$input$testing,  testing := 1L]
-
-
-dataset_test <- dataset[testing == 1, ]
 
 # libero espacio
 rm(dataset)
 gc()
 
-# Aqui comienza la configuracion de la Bayesian Optimization
-funcion_optimizar <- EstimarGanancia_lightgbm # la funcion que voy a maximizar
 
 cat("\n\nLa optimizacion Bayesiana ha terminado\n")
 EJEC = finalizar_corrida (EJEC)
