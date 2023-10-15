@@ -1,4 +1,4 @@
-# Corrida Nro 10: Igual a la corrida 8 pero con otra semilla.
+# Corrida Nro 11: Igual a la corrida 8 pero con otra semilla.
 #   8 vCPU
 #  16 GB memoria RAM
 
@@ -22,7 +22,7 @@ PARAM$input$dataset <- "./datasets/competencia_02.csv.gz"
 PARAM$input$training <- c(202101, 202102, 202103, 202104, 202105)
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 
-PARAM$finalmodel$semilla <- 106721
+PARAM$finalmodel$semilla <- 106747
 
 PARAM$finalmodel$num_iterations <- 4928
 PARAM$finalmodel$learning_rate <- 0.0189943331895954
@@ -42,8 +42,8 @@ EJEC$fuente = "524_lightgbm_final.r"
 #definir si es en google cloud o en la maquina local
 #EJEC$frenar_corrida = TRUE
 EJEC$frenar_corrida = FALSE
-EJEC$tipo_ejecicion = 'local'
-#EJEC$tipo_ejecicion = 'Google Cloud'
+#EJEC$tipo_ejecicion = 'local'
+EJEC$tipo_ejecicion = 'Google Cloud'
 
 if (EJEC$tipo_ejecicion == 'local') {
   source("~/Documents/dmeyf/dmeyf2023/src/competencias/Kaggle02/Utilities.R")
