@@ -69,6 +69,7 @@ dataset[, lag :=
           (as.integer(foto_mes) %% 100) - (as.integer(last_seen) %% 100), ]
 
 dataset <- dataset[lag >= PARAM$max_lag, ]
+dataset <- dataset[cluster %in% c(4,5,6,7), ]
 
 # creo la carpeta donde va el experimento
 dir.create(paste0("./exp/", PARAM$experimento, "/"), showWarnings = FALSE)
@@ -78,6 +79,57 @@ setwd(paste0("./exp/", PARAM$experimento, "/"))
 campos_buenos <- setdiff(
   colnames(dataset),
   c("numero_de_cliente", "foto_mes", "clase_ternaria", "cluster")
+)
+
+campos_buenos <- c(
+  "cliente_vip",
+  "mrentabilidad",
+  "mcuenta_debitos_automaticos",
+  "chomebanking_transacciones",
+  "cpagodeservicios",
+  "mpagodeservicios",
+  "cpagomiscuentas",
+  "mplazo_fijo_pesos",
+  "mplazo_fijo_dolares",
+  "ctransferencias_recibidas",
+  "ctransferencias_emitidas",
+  "ccheques_emitidos_rechazados",
+  "ccheques_emitidos",
+  "ccheques_depositados_rechazados",
+  "mcheques_emitidos_rechazados",
+  "mprestamos_hipotecarios",
+  "cprestamos_hipotecarios",
+  "cseguro_auto",
+  "minversion1_dolares",
+  "minversion1_pesos",
+  "ccaja_seguridad",
+  "mpayroll",
+  "mpayroll2",
+  "cpayroll2_trx",
+  "Master_mconsumosdolares",
+  "Master_mpagado",
+  "Master_mpagosdolares",
+  "Master_delinquency",
+  "Master_madelantopesos",
+  "mtarjeta_master_descuentos",
+  "ctarjeta_master_debitos_automaticos",
+  "mttarjeta_master_debitos_automaticos",
+  "ctarjeta_master_transacciones",
+  "mtarjeta_master_consumo",
+  "ctarjeta_visa_transacciones",
+  "mtarjeta_visa_consumo",
+  "ctarjeta_visa_debitos_automaticos",
+  "Visa_mpagominimo",
+  "Visa_delinquency",
+  "Visa_mconsumospesos",
+  "Visa_mpagosdolares",
+  "Visa_cconsumos",
+  "mttarjeta_visa_debitos_automaticos",
+  "cforex",
+  "mforex_sell",
+  "cforex_buy",
+  "mforex_buy",
+  "cforex_sell"
 )
 
 # Use the RColorBrewer package to choose a palette
