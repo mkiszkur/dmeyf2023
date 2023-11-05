@@ -97,6 +97,12 @@ for (campo in campos_buenos) {
   )
   
 
+data_table_consolidada2 <- data.table(
+  campo = character(0),
+  foto_mes = integer(0),
+  nas_ratio = numeric(0)
+)
+  
 
 for (campo in campos_buenos) {
   
@@ -110,13 +116,13 @@ for (campo in campos_buenos) {
   
   tbl_filtrado <- tbl[nas_ratio == 1]
   
-  data_table_consolidada <- rbind(data_table_consolidada, tbl_filtrado)
+  data_table_consolidada2 <- rbind(data_table_consolidada2, tbl_filtrado)
   
 }  
   archivo_zero_ratios <- "./nas_ratios.csv"
   
   
-  fwrite(data_table_consolidada,
+  fwrite(data_table_consolidada2,
          file = archivo_zero_ratios,
          sep = ","
   )  
