@@ -104,15 +104,15 @@ for (campo in columnas_feature_eng) {
 
 
 # Visualiza las columnas de interés
-result <- dataset[, .(cliente_antiguedad, lag_1_cliente_antiguedad_6M, lag_2_cliente_antiguedad_6M, lag_3_cliente_antiguedad_6M, 
-                      avg_cliente_antiguedad_6M, dlag_1_cliente_antiguedad_6M, dlag_2_cliente_antiguedad_6M, dlag_3_cliente_antiguedad_6M)]
+#result <- dataset[, .(cliente_antiguedad, lag_1_cliente_antiguedad_6M, lag_2_cliente_antiguedad_6M, lag_3_cliente_antiguedad_6M, 
+#                      avg_cliente_antiguedad_6M, dlag_1_cliente_antiguedad_6M, dlag_2_cliente_antiguedad_6M, dlag_3_cliente_antiguedad_6M)]
 
 
 # Muestra el resultado
-print(result)
+#print(result)
 
 fwrite(dataset,
-       file = "./datasets/competencia_03_FE.csv.gz",
+       file = "./datasets/competencia_03_NAs_FE.csv.gz",
        sep = "\t"
 )
 

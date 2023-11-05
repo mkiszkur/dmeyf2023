@@ -41,9 +41,9 @@ PARAM$input$dataset <- "./datasets/competencia_03_FE_LAG1.csv.gz"
 
 # los meses en los que vamos a entrenar
 #  mucha magia emerger de esta eleccion
-PARAM$input$testing <- c(202105)
-PARAM$input$validation <- c(202104)
-PARAM$input$training <- c(202007, 202006, 202008, 202009, 202010, 202011, 202012, 202101, 202102, 202103)
+PARAM$input$testing <- c(202106)
+PARAM$input$validation <- c(202107)
+PARAM$input$training <- c(202006, 202007, 202008, 202009, 202010, 202011, 202012, 202101, 202102, 202103, 202104, 202105)
 
 # un undersampling de 0.1  toma solo el 10% de los CONTINUA
 PARAM$trainingstrategy$undersampling <- 1.0

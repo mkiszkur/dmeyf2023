@@ -1,5 +1,6 @@
 # Función para verificar si un número es primo
 
+
 es_primo <- function(n) {
   if (n <= 1) return(FALSE)
   if (n <= 3) return(TRUE)
@@ -11,6 +12,8 @@ es_primo <- function(n) {
   }
   return(TRUE)
 }
+
+setwd("/Users/miguelkiszkurno/Documents/dmeyf") 
 
 # Número inicial mayor que 999983
 hasta_numero = 999983
@@ -33,6 +36,13 @@ while (numero < hasta_numero) {
 # Imprimir la lista de números primos
 print(numeros_primos)
 
+tb_semillas <- as.data.table(numeros_primos)
+archivo_importancia <- "./datasets/semillas.txt"
+
+fwrite(tb_semillas,
+       file = archivo_importancia,
+       sep = "\t"
+)
 
 
 
