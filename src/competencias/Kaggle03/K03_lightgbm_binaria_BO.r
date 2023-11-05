@@ -9,6 +9,9 @@
 rm(list = ls()) # remove all objects
 gc() # garbage collection
 
+#install.packages("rjson")
+library(rjson)
+
 require("data.table")
 require("rlist")
 
@@ -35,9 +38,9 @@ cat("Inicio de la ejecución: ", format(inicio, format = "%Y-%m-%d %H:%M:%S"), "
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento <- "K03BO"
+PARAM$experimento <- "K03BO_P"
 
-PARAM$input$dataset <- "./datasets/competencia_03_FE_LAG1.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03_100.csv.gz"
 
 # los meses en los que vamos a entrenar
 #  mucha magia emerger de esta eleccion
@@ -88,7 +91,6 @@ PARAM$lgb_basicos <- list(
 
   seed = PARAM$lgb_semilla
 )
-
 
 # Aqui se cargan los hiperparametros que se optimizan
 #  en la Bayesian Optimization
@@ -272,28 +274,39 @@ EstimarGanancia_lightgbm <- function(x) {
 }
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
+
 # Aqui empieza el programa
 
 # Aqui se debe poner la carpeta de la computadora local
-EJEC <- list()
 
-EJEC$tipo_ejecicion = 'local'
-#EJEC$tipo_ejecicion = 'Google Cloud'
+PARAM$tipo_ejecucion = 'local'
+#PARAM$tipo_ejecucion = 'Google Cloud'
+PARAM$fecha_hora_inicio = format(inicio, format = "%Y-%m-%d %H:%M:%S")
 
-if (EJEC$tipo_ejecicion == 'local') {
+if (PARAM$tipo_ejecucion == 'local') {
   setwd("/Users/miguelkiszkurno/Documents/dmeyf") 
 }else {
   setwd("~/buckets/b1/") # Establezco el Working Directory
 }
 
 
-# cargo el dataset donde voy a entrenar el modelo
-dataset <- fread(PARAM$input$dataset)
-
-
 # creo la carpeta donde va el experimento
 dir.create("./exp/", showWarnings = FALSE)
 dir.create(paste0("./exp/", PARAM$experimento, "/"), showWarnings = FALSE)
+
+
+#Guardo los datos que use para la BO en un archivo de parametros
+archivo <- paste0("./exp/", PARAM$experimento, "/parametros_inicio.json")
+
+json_data <- toJSON(PARAM)
+writeLines(json_data, con = archivo)
+
+cat("Los datos se han guardado en el archivo:", archivo, "\n")
+
+
+# cargo el dataset donde voy a entrenar el modelo
+dataset <- fread(PARAM$input$dataset)
+
 
 # Establezco el Working Directory DEL EXPERIMENTO
 setwd(paste0("./exp/", PARAM$experimento, "/"))
