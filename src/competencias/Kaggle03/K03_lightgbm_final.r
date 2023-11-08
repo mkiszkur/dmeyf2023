@@ -19,7 +19,7 @@ PARAM$experimento <- "KA03TR"
 PARAM$input$dataset <- "./datasets/competencia_02.csv.gz"
 
 # meses donde se entrena el modelo
-PARAM$input$training <- c(202012, 202101, 202102, 202103, 202104, 202105)
+PARAM$input$training <- c(202006, 202007, 202008, 202009, 202010, 202011, 202012, 202101, 202102, 202103, 202104, 202105)
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 
 PARAM$finalmodel$semilla <- 102191
@@ -64,6 +64,11 @@ PARAM$finalmodel$lgb_basicos <- list(
   seed = PARAM$finalmodel$semilla
 )
 
+#cat (PARAM$finalmodel$lgb_basicos$seed)
+#PARAM$finalmodel$lgb_basicos$seed = 1
+#cat (PARAM$finalmodel$lgb_basicos$seed)
+#PARAM$finalmodel$lgb_basicos$seed = PARAM$finalmodel$semilla
+#cat (PARAM$finalmodel$lgb_basicos$seed)
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -72,7 +77,6 @@ setwd("~/buckets/b1")
 
 # cargo el dataset donde voy a entrenar
 dataset <- fread(PARAM$input$dataset, stringsAsFactors = TRUE)
-
 
 # Catastrophe Analysis  -------------------------------------------------------
 # deben ir cosas de este estilo

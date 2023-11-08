@@ -100,6 +100,8 @@ for (campo in columnas_feature_eng) {
   dataset[, paste0("dlag_1_", campo, "_6M") := get(campo) - get(paste0("lag_1_", campo, "_6M")), by = numero_de_cliente]
   dataset[, paste0("dlag_2_", campo, "_6M") := get(campo) - get(paste0("lag_2_", campo, "_6M")), by = numero_de_cliente]
   dataset[, paste0("dlag_3_", campo, "_6M") := get(campo) - get(paste0("lag_3_", campo, "_6M")), by = numero_de_cliente]
+#  dataset[, paste0(cols_to_shift, "_diff3") := lapply(.SD, function(col) (col - shift(col, type = "lag", n = 3, fill = col[1])) / shift(col, type = "lag", n = 3, fill = col[1])), 
+#     by = numero_de_cliente, .SDcols = cols_to_shift]
 }
 
 
