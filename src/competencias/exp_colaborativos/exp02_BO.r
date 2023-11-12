@@ -36,7 +36,7 @@ PARAM <- list()
 
 PARAM$experimento <- "EC002"
 
-#PARAM$input$dataset <- "./datasets/Competencia_03_EC.csv.gz"
+PARAM$input$dataset <- "./datasets/Competencia_03_EC.csv.gz"
 
 # los meses en los que vamos a entrenar
 PARAM$input$testing <- c(202105)
@@ -278,7 +278,7 @@ setwd("~/buckets/b1") # Establezco el Working Directory
 getwd()
 
 # cargo el dataset donde voy a entrenar el modelo
-dataset <- fread("./datasets/Experimentos_colaborativos/df_cleaned_experimento_colaborativo.csv.gz")
+dataset <- fread(PARAM$input$dataset)
 
 
 # creo la carpeta donde va el experimento
