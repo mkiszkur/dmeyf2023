@@ -138,9 +138,7 @@ dtrain <- lgb.Dataset(
   label = dataset[train == 1L, clase01]
 )
 
-
 ###### --- Aca empieza con el modelo. tengo que poner el for
-
 
 
 sumarizacion <- numeric(nrow(dataset[foto_mes == PARAM$input$future]))
