@@ -34,15 +34,15 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento <- "EC002"
+PARAM$experimento <- "EC014"
 
 PARAM$input$dataset <- "./datasets/Competencia_03_EC.csv.gz"
 
 # los meses en los que vamos a entrenar
 PARAM$input$testing <- c(202105)
 PARAM$input$validation <- c(202104)
-PARAM$input$training <- c(202003, 202004, 202006, 
-                          202008, 202009, 202010,
+PARAM$input$training <- c(202003, 202004, 202005, 202006, 
+                          202007, 202008, 202009,
                           202011, 202012, 202101, 202102,
                           202103)
 
