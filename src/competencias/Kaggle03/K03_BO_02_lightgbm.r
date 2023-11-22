@@ -30,7 +30,7 @@ escribir_archivo <- function(archivo, tabla) {
 PARAM <- list()
 
 #Experimento <- Experimento Colabortivo Prueba 001
-PARAM$experimento <- "K03_LGBM_001"
+PARAM$experimento <- "K03_LGBM_002"
 
 PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG2.csv.gz"
 
@@ -40,7 +40,7 @@ PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG2.csv.gz"
 PARAM$input$training <- c(201907, 201908, 201909, 201910, 201911, 201912, 
                           202001, 202002, 202003, 202004, 202005, 202006, 
                           202007, 202008, 202009, 202010, 202011, 202012, 
-                          202101, 202102, 202103, 202104, 202105)
+                          202101, 202102, 202103, 202104, 202105, 202106)
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 
 PARAM$finalmodel$semilla <- 106703

@@ -30,9 +30,9 @@ escribir_archivo <- function(archivo, tabla) {
 PARAM <- list()
 
 #Experimento <- Experimento Colabortivo Prueba 001
-PARAM$experimento <- "K03_LGBM_001"
+PARAM$experimento <- "K03_LGBM_003"
 
-PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG1.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG3.csv.gz"
 
 
 # meses donde se entrena el modelo
