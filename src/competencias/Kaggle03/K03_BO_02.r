@@ -34,9 +34,9 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento <- "K03_BO_01"
+PARAM$experimento <- "K03_BO_02"
 
-PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG1.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG2.csv.gz"
 
 # los meses en los que vamos a entrenar
 PARAM$input$testing <- c(202107)

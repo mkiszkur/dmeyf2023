@@ -32,7 +32,7 @@ PARAM <- list()
 #Experimento <- Experimento Colabortivo Prueba 001
 PARAM$experimento <- "K03_LGBM_001"
 
-PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG1.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG2.csv.gz"
 
 
 # meses donde se entrena el modelo
