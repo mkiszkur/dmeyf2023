@@ -33,7 +33,7 @@ PARAM <- list()
 PARAM$experimento <- "K03_LGBM_001"
 
 PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG1.csv.gz"
-PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
+#PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
 
 
 # meses donde se entrena el modelo
@@ -41,7 +41,7 @@ PARAM$input$training <- c(201907, 201908, 201909, 201910, 201911, 201912,
                           202001, 202002, 202003, 202004, 202005, 202006, 
                           202007, 202008, 202009, 202010, 202011, 202012, 
                           202101, 202102, 202103, 202104, 202105, 202106)
-PARAM$input$training <- c(202105)
+#PARAM$input$training <- c(202105)
 
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 PARAM$input$kaggle <- c(202109) # meses donde se aplica el modelo
@@ -98,11 +98,11 @@ PARAM$semillerio <- c(100189, 100193, 100207, 100213, 100237, 100267,
                       100343, 100357, 100361, 100363, 100379, 100391,
                       100393, 100403, 100411)
 
-PARAM$semillerio <- c(100189,100193)
+#PARAM$semillerio <- c(100189,100193)
                       
 
 PARAM$tipo_ejecucion = 'Google Cloud'
-PARAM$tipo_ejecucion = 'local'
+#PARAM$tipo_ejecucion = 'local'
 
 if (PARAM$tipo_ejecucion == 'local') {
   setwd("/Users/miguelkiszkurno/Documents/dmeyf") 
