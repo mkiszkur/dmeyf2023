@@ -17,12 +17,12 @@ options(error = function() {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-PARAM$experimento <- "K03FE"
+PARAM$experimento <- "K03FE_F6"
 
 PARAM$input$dataset <- "./datasets/competencia_03_5000.csv.gz"
-PARAM$input$dataset <- "./datasets/competencia_03_100.csv.gz"
 PARAM$input$dataset <- "./datasets/competencia_03_1000.csv.gz"
 PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03_100.csv.gz"
 
 
 #------------------------------------------------------------------------------
@@ -30,8 +30,8 @@ PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
 #definir si es en google cloud o en la maquina local
 EJEC <- list()
 
-#EJEC$tipo_ejecicion = 'local'
 EJEC$tipo_ejecicion = 'Google Cloud'
+EJEC$tipo_ejecicion = 'local'
 
 if (EJEC$tipo_ejecicion == 'local') {
   setwd("/Users/miguelkiszkurno/Documents/dmeyf") 
@@ -88,33 +88,35 @@ inicio <- Sys.time()
 
 iteracion <- 0
 # Itera sobre cada campo en la lista
-for (campo in columnas_feature_eng) {
-  iteracion <- iteracion + 1
-  cat(format(Sys.time(), format = "%Y-%m-%d %H:%M:%S"), " iteracion nro: ", iteracion, "campo: ", campo, "registros.\n")
-  
-  # Calcula el valor anterior del campo por "numero_de_cliente"
-  dataset[, paste0("lag_1_", campo, "_6M") := shift(get(campo), type = "lag"), by = numero_de_cliente]
-  dataset[, paste0("lag_2_", campo, "_6M") := shift(get(campo), n = 2L, type = "lag"), by = numero_de_cliente]
-  dataset[, paste0("lag_3_", campo, "_6M") := shift(get(campo), n = 3L, type = "lag"), by = numero_de_cliente]
-  dataset[, paste0("avg_", campo, "_6M") := frollmean(get(campo), n = 6L, align = "right"), by = numero_de_cliente]
-  dataset[, paste0("dlag_1_", campo, "_6M") := get(campo) - get(paste0("lag_1_", campo, "_6M")), by = numero_de_cliente]
-  dataset[, paste0("dlag_2_", campo, "_6M") := get(campo) - get(paste0("lag_2_", campo, "_6M")), by = numero_de_cliente]
-  dataset[, paste0("dlag_3_", campo, "_6M") := get(campo) - get(paste0("lag_3_", campo, "_6M")), by = numero_de_cliente]
-#  dataset[, paste0(cols_to_shift, "_diff3") := lapply(.SD, function(col) (col - shift(col, type = "lag", n = 3, fill = col[1])) / shift(col, type = "lag", n = 3, fill = col[1])), 
-#     by = numero_de_cliente, .SDcols = cols_to_shift]
-}
+
+# diff lag 6
+dataset[, paste0(columnas_feature_eng, "_lag1") := lapply(.SD, function(col) (shift(col, type = "lag", n = 1))), by = numero_de_cliente, .SDcols = columnas_feature_eng]
+dataset[, paste0(columnas_feature_eng, "_lag2") := lapply(.SD, function(col) (shift(col, type = "lag", n = 2))), by = numero_de_cliente, .SDcols = columnas_feature_eng]
+dataset[, paste0(columnas_feature_eng, "_lag3") := lapply(.SD, function(col) (shift(col, type = "lag", n = 3))), by = numero_de_cliente, .SDcols = columnas_feature_eng]
+dataset[, paste0(columnas_feature_eng, "_lag6") := lapply(.SD, function(col) (shift(col, type = "lag", n = 6))), by = numero_de_cliente, .SDcols = columnas_feature_eng]
+
+dataset[, paste0(columnas_feature_eng, "_dlag1") := lapply(.SD, function(col) (col - shift(col, type = "lag", n = 1))), by = numero_de_cliente, .SDcols = columnas_feature_eng]
+dataset[, paste0(columnas_feature_eng, "_rlag1") := lapply(.SD, function(col) ((col - shift(col, type = "lag", n = 1)))/col), by = numero_de_cliente, .SDcols = columnas_feature_eng]
 
 
-# Visualiza las columnas de interés
-#result <- dataset[, .(cliente_antiguedad, lag_1_cliente_antiguedad_6M, lag_2_cliente_antiguedad_6M, lag_3_cliente_antiguedad_6M, 
-#                      avg_cliente_antiguedad_6M, dlag_1_cliente_antiguedad_6M, dlag_2_cliente_antiguedad_6M, dlag_3_cliente_antiguedad_6M)]
+dataset[, paste0(columnas_feature_eng, "_promedio_lag3") := lapply(.SD, function(col) {
+  frollmean(col, n = 3, align = "right", fill = NA)
+}), by = numero_de_cliente, .SDcols = columnas_feature_eng]
+
+dataset[, paste0(columnas_feature_eng, "_promedio_lag6") := lapply(.SD, function(col) {
+  frollmean(col, n = 6, align = "right", fill = NA)
+}), by = numero_de_cliente, .SDcols = columnas_feature_eng]
 
 
-# Muestra el resultado
-#print(result)
+#Para verificacion y visualizacion
+#tst = dataset[, list(numero_de_cliente, foto_mes,
+#                     active_quarter, active_quarter_lag1, active_quarter_dlag1, active_quarter_rlag1, active_quarter_lag2, active_quarter_lag3,active_quarter_lag6,active_quarter_promedio_lag6,active_quarter_promedio_lag3,
+#                     Visa_mconsumototal, Visa_mconsumototal_lag1, Visa_mconsumototal_dlag1, Visa_mconsumototal_rlag1, Visa_mconsumototal_lag2, Visa_mconsumototal_lag3, Visa_mconsumototal_lag6, Visa_mconsumototal_promedio_lag6,Visa_mconsumototal_promedio_lag3)]
+#View(tst)
+
 
 fwrite(dataset,
-       file = "./datasets/competencia_03_NAs_FE.csv.gz",
+       file = "./datasets/competencia_03_NAs_FE_6__dlag_rlag.csv.gz",
        sep = "\t"
 )
 
@@ -125,9 +127,10 @@ cat("Inicio de la ejecución: ", format(inicio, format = "%Y-%m-%d %H:%M:%S"), "
 cat("fin de la ejecución: ", format(Sys.time(), format = "%Y-%m-%d %H:%M:%S"), "\n")
 
 
+
 # libero espacio
-rm(dataset)
-gc()
+#rm(dataset)
+#gc()
 
 
 cat("\n\nEjecucion finalizada\n")

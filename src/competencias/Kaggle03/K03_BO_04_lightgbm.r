@@ -29,11 +29,11 @@ escribir_archivo <- function(archivo, tabla, separador = ",") {
 #  muy pronto esto se leera desde un archivo formato .yaml
 PARAM <- list()
 
-#Experimento <- Experimento Colabortivo Prueba 001
-PARAM$experimento <- "K03_LGBM_001"
+#Experimento <- Experimento Colabortivo Prueba 004 (50 semillas)
+PARAM$experimento <- "K03_LGBM_004"
 
 PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG1.csv.gz"
-#PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
 
 
 # meses donde se entrena el modelo
@@ -41,7 +41,7 @@ PARAM$input$training <- c(201907, 201908, 201909, 201910, 201911, 201912,
                           202001, 202002, 202003, 202004, 202005, 202006, 
                           202007, 202008, 202009, 202010, 202011, 202012, 
                           202101, 202102, 202103, 202104, 202105, 202106)
-#PARAM$input$training <- c(202105)
+PARAM$input$training <- c(202105)
 
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 PARAM$input$kaggle <- c(202109) # meses donde se aplica el modelo
@@ -98,18 +98,17 @@ PARAM$semillerio <- c(100189, 100193, 100207, 100213, 100237, 100267,
                       100343, 100357, 100361, 100363, 100379, 100391,
                       100393, 100403, 100411)
 
-#PARAM$semillerio <- c(100189,100193)
+PARAM$semillerio <- c(100189,100193)
                       
 
 PARAM$tipo_ejecucion = 'Google Cloud'
-#PARAM$tipo_ejecucion = 'local'
+PARAM$tipo_ejecucion = 'local'
 
 if (PARAM$tipo_ejecucion == 'local') {
   setwd("/Users/miguelkiszkurno/Documents/dmeyf") 
 }else {
   setwd("~/buckets/b1/") # Establezco el Working Directory
 }
-
 
 
 # cargo el dataset donde voy a entrenar
@@ -165,6 +164,13 @@ sumarizacion[, prob := 0]
 sumarizacion_kaggle <- dapply_kaggle[, list(numero_de_cliente, foto_mes)]
 sumarizacion_kaggle[, prob := 0]
 
+if (file.exists(paste0(PARAM$experimento, ".RData"))) {
+  print("------EXISTE ------")
+  load("C:/ ... Your Path ... /all_data.RData")
+}
+
+  
+
 for (s in PARAM$semillerio){
   
   cat(format(Sys.time(), format = "%Y-%m-%d %H:%M:%S"), " - Inicio modelo de la semilla: ", s, "\n")
@@ -212,6 +218,7 @@ for (s in PARAM$semillerio){
   escribir_archivo(paste0 (s, "_prediccion.txt"), tb_entrega)
   
   escribir_archivo(paste0 (s, "_prediccion_kaggle.txt"), tb_entrega_kaggle)
+  save.image(paste0(PARAM$experimento, ".RData"))
   
 }
 

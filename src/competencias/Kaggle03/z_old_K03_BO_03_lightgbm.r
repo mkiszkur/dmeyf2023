@@ -13,11 +13,11 @@ require("lightgbm")
 #-----------------
 #Funciones Auxiliares
 
-escribir_archivo <- function(archivo, tabla, separador = ",") {
+escribir_archivo <- function(archivo, tabla) {
   
   fwrite(tabla,
          file = archivo,
-         sep = separador
+         sep = "\t"
   )
   
   
@@ -30,29 +30,27 @@ escribir_archivo <- function(archivo, tabla, separador = ",") {
 PARAM <- list()
 
 #Experimento <- Experimento Colabortivo Prueba 001
-PARAM$experimento <- "K03_LGBM_001"
+PARAM$experimento <- "K03_LGBM_003"
 
-PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG1.csv.gz"
-#PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG3.csv.gz"
 
 
 # meses donde se entrena el modelo
+#PARAM$input$training <- c(202012, 202101, 202102, 202103, 202104, 202105)
 PARAM$input$training <- c(201907, 201908, 201909, 201910, 201911, 201912, 
                           202001, 202002, 202003, 202004, 202005, 202006, 
                           202007, 202008, 202009, 202010, 202011, 202012, 
                           202101, 202102, 202103, 202104, 202105, 202106)
-#PARAM$input$training <- c(202105)
-
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
-PARAM$input$kaggle <- c(202109) # meses donde se aplica el modelo
 
 PARAM$finalmodel$semilla <- 106703
 
-PARAM$finalmodel$optim$num_iterations <- 1089
-PARAM$finalmodel$optim$learning_rate <- 0.103734278324661
-PARAM$finalmodel$optim$feature_fraction <- 0.211060645473065
-PARAM$finalmodel$optim$num_leaves <- 584
-PARAM$finalmodel$optim$min_data_in_leaf <- 48080
+# hiperparametros intencionalmente NO optimos
+PARAM$finalmodel$optim$num_iterations <- 1862
+PARAM$finalmodel$optim$learning_rate <- 0.0203555779991533
+PARAM$finalmodel$optim$feature_fraction <- 0.939033319807626
+PARAM$finalmodel$optim$num_leaves <- 350
+PARAM$finalmodel$optim$min_data_in_leaf <- 15281
 
 
 # Hiperparametros FIJOS de  lightgbm
@@ -98,8 +96,6 @@ PARAM$semillerio <- c(100189, 100193, 100207, 100213, 100237, 100267,
                       100343, 100357, 100361, 100363, 100379, 100391,
                       100393, 100403, 100411)
 
-#PARAM$semillerio <- c(100189,100193)
-                      
 
 PARAM$tipo_ejecucion = 'Google Cloud'
 #PARAM$tipo_ejecucion = 'local'
@@ -155,15 +151,10 @@ dtrain <- lgb.Dataset(
 # aplico el modelo a los datos sin clase
 dapply <- dataset[foto_mes == PARAM$input$future]
 
-dapply_kaggle <- dataset[foto_mes == PARAM$input$kaggle]
-
 
 #Genero dataset de ceros para acumular las probabilidades
 sumarizacion <- dapply[, list(numero_de_cliente, foto_mes)]
 sumarizacion[, prob := 0]
-
-sumarizacion_kaggle <- dapply_kaggle[, list(numero_de_cliente, foto_mes)]
-sumarizacion_kaggle[, prob := 0]
 
 for (s in PARAM$semillerio){
   
@@ -186,47 +177,32 @@ for (s in PARAM$semillerio){
   tb_importancia <- as.data.table(lgb.importance(modelo))
   escribir_archivo(paste0 (s, "_impo.txt"), tb_importancia)
 
+
   # aplico el modelo a los datos nuevos
   prediccion <- predict(
     modelo,
     data.matrix(dapply[, campos_buenos, with = FALSE])
   )
   
-  prediccion_kaggle <- predict(
-    modelo,
-    data.matrix(dapply_kaggle[, campos_buenos, with = FALSE])
-  )
-
   # genero la tabla de entrega
   tb_entrega <- dapply[, list(numero_de_cliente, foto_mes)]
   tb_entrega[, prob := prediccion]
   
   sumarizacion[, prob := prob + prediccion]
 
-  # genero la tabla de entrega Kaggle
-  tb_entrega_kaggle <- dapply_kaggle[, list(numero_de_cliente, foto_mes)]
-  tb_entrega_kaggle[, prob := prediccion_kaggle]
-  sumarizacion_kaggle[, prob := prob + prediccion_kaggle]
-  
   # grabo las probabilidad del modelo
   escribir_archivo(paste0 (s, "_prediccion.txt"), tb_entrega)
-  
-  escribir_archivo(paste0 (s, "_prediccion_kaggle.txt"), tb_entrega_kaggle)
-  
+
 }
 
 # grabo las sumas de las probabilidades
 escribir_archivo("prediccion_total.txt", sumarizacion)
-
-escribir_archivo("prediccion_total_kaggle.txt", sumarizacion_kaggle)
 
 #Me guardo el verdadero valor (1 si era baja+2, 0 sino)
 sumarizacion$real <- realidad$real
 
 # ordeno por probabilidad descendente
 setorder(sumarizacion, -prob)
-
-setorder(sumarizacion_kaggle, -prob)
 
 # genero archivos con los "envíos" mejores
 cortes <- seq(8000, 15000, by = 500)
@@ -253,15 +229,8 @@ for (envios in cortes) {
   escribir_archivo(paste0 (PARAM$experimento, "_", envios, "_ganancias.csv"), ganancias)
   
   
-  #Escribo el archivo
+  #Escribo el archivo para kaggle
   escribir_archivo(paste0 (PARAM$experimento, "_", envios, ".csv"), sumarizacion[, list(numero_de_cliente, Predicted)])
-  
-  # Ahora kaggle
-  
-  sumarizacion_kaggle[, Predicted := 0L]
-  sumarizacion_kaggle[1:envios, Predicted := 1L]
-  escribir_archivo(paste0 (PARAM$experimento, "_", envios, "_kaggle.csv"), sumarizacion_kaggle[, list(numero_de_cliente, Predicted)])
-  
   
 }
 
