@@ -32,8 +32,8 @@ PARAM <- list()
 #Experimento <- Experimento Colabortivo Prueba 004 (50 semillas)
 PARAM$experimento <- "K03_LGBM_004"
 
-PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_LAG1.csv.gz"
-PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
+PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_6__dlag_rlag.csv.gz"
+#PARAM$input$dataset <- "./datasets/competencia_03.csv.gz"
 
 
 # meses donde se entrena el modelo
@@ -98,11 +98,11 @@ PARAM$semillerio <- c(100189, 100193, 100207, 100213, 100237, 100267,
                       100343, 100357, 100361, 100363, 100379, 100391,
                       100393, 100403, 100411)
 
-PARAM$semillerio <- c(100189,100193)
+#PARAM$semillerio <- c(100189,100193)
                       
 
 PARAM$tipo_ejecucion = 'Google Cloud'
-PARAM$tipo_ejecucion = 'local'
+#PARAM$tipo_ejecucion = 'local'
 
 if (PARAM$tipo_ejecucion == 'local') {
   setwd("/Users/miguelkiszkurno/Documents/dmeyf") 
@@ -164,10 +164,10 @@ sumarizacion[, prob := 0]
 sumarizacion_kaggle <- dapply_kaggle[, list(numero_de_cliente, foto_mes)]
 sumarizacion_kaggle[, prob := 0]
 
-if (file.exists(paste0(PARAM$experimento, ".RData"))) {
-  print("------EXISTE ------")
-  load("C:/ ... Your Path ... /all_data.RData")
-}
+#if (file.exists(paste0(PARAM$experimento, ".RData"))) {
+#  print("------EXISTE ------")
+#  load("C:/ ... Your Path ... /all_data.RData")
+#}
 
   
 
