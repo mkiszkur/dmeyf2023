@@ -48,11 +48,11 @@ PARAM$input$kaggle <- c(202109) # meses donde se aplica el modelo
 
 PARAM$finalmodel$semilla <- 106703
 
-PARAM$finalmodel$optim$num_iterations <- 1089
-PARAM$finalmodel$optim$learning_rate <- 0.103734278324661
-PARAM$finalmodel$optim$feature_fraction <- 0.211060645473065
-PARAM$finalmodel$optim$num_leaves <- 584
-PARAM$finalmodel$optim$min_data_in_leaf <- 48080
+PARAM$finalmodel$optim$num_iterations <- 580
+PARAM$finalmodel$optim$learning_rate <- 0.0412347724725259
+PARAM$finalmodel$optim$feature_fraction <- 0.538816707748338
+PARAM$finalmodel$optim$num_leaves <- 262
+PARAM$finalmodel$optim$min_data_in_leaf <- 40738
 
 
 # Hiperparametros FIJOS de  lightgbm
