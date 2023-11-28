@@ -40,7 +40,7 @@ PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_6__dlag_rlag.csv.gz"
 PARAM$input$training <- c(201907, 201908, 201909, 201910, 201911, 201912, 
                           202001, 202002, 202011, 202012, 
                           202101, 202102, 202103, 202104, 202105, 202106)
-PARAM$input$training <- c(202105)
+#PARAM$input$training <- c(202105)
 
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 PARAM$input$kaggle <- c(202109) # meses donde se aplica el modelo
