@@ -41,7 +41,7 @@ PARAM$input$dataset <- "./datasets/competencia_03_NAs_FE_6__dlag_rlag.csv.gz"
 # los meses en los que vamos a entrenar
 PARAM$input$testing <- c(202107)
 PARAM$input$validation <- c(202106)
-PARAM$input$training <- c(202003, 202004, 202005, 202006, 202007
+PARAM$input$training <- c(202003, 202004, 202005, 202006, 202007,
                           202008, 202009, 202011, 202012, 
                           202101, 202102, 202103, 202104, 202105)
 
