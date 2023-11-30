@@ -1,1 +1,4 @@
-
+Pasos para la ejecucion
+Primero correr el script K03_Feature_eng.r genera las columnas utilizadas por el LGBM. Solo requiere ajustar el valor de laa variables PARAM$input$dataset y EJEC$tipo_ejecicion
+Luego correr el script /K03_BO_05.r, que es el encargado de hacer la busqueda bayesiana. Solo requiere modificar la variable PARAM$input$dataset
+Luego correr el script K03_BO_05_lightgbm.r. que es el que entrena el modelo con los parametros obtenidos por la bayesiana. Solo requiere modificar la variable PARAM$input$dataset
