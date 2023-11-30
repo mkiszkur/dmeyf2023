@@ -1,0 +1,163 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+# limpio la memoria
+rm(list = ls()) # remove all objects
+gc() # garbage collection
+
+
+```
+
+```{r}
+library(ggplot2)
+ds <- read.table(paste0("./seleccion/consolidado.csv"),
+                        sep=";", dec=",", header = TRUE, fill = TRUE)
+ds
+```
+
+```{r}
+ggplot(ds, aes(x = corte, y = test, color = experimento)) +
+  geom_line() +
+  labs(title = "Ganancia de Test por Corte y Experimento",
+       x = "Corte",
+       y = "Ganancia en test") +
+  theme_minimal()
+```
+
+```{r}
+ggplot(ds, aes(x = corte, y = kaggle, color = experimento)) +
+  geom_line() +
+  labs(title = "Ganancia de Kaggle por Corte y Experimento",
+       x = "Corte",
+       y = "Ganancia en test") +
+  theme_minimal()
+```
+```{r}
+ds$kaggle_nor <- scale(ds$kaggle)
+ds$test_nor <- scale(ds$test)
+ds
+
+```
+```{r}
+ggplot(ds, aes(x = corte, y = kaggle_nor, color = experimento)) +
+  geom_line() +
+  labs(title = "Ganancia de Kaggle (por)normalizada) Corte y Experimento",
+       x = "Corte",
+       y = "Ganancia en test") +
+  theme_minimal()
+
+ggplot(ds, aes(x = corte, y = test_nor, color = experimento)) +
+  geom_line() +
+  labs(title = "Ganancia de test (normalizada) por Corte y Experimento",
+       x = "Corte",
+       y = "Ganancia en test") +
+  theme_minimal()
+```
+```{r}
+# Filtrar los datos para el Experimento 1
+ds_e <- ds[ds$experimento == "LGBM_001", ]
+
+# Crear el gráfico usando ggplot2
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = kaggle_nor, color = "Ganancia_Kaggle")) +
+  geom_line(aes(y = test_nor, color = "Ganancia_Test")) +
+  labs(title = "Comparación de Kaggle y Test Normalizados (Experimento 1)",
+       x = "Corte",
+       y = "Valor Normalizado") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+```
+```{r}
+# Filtrar los datos para el Experimento 4
+ds_e <- ds[ds$experimento == "LGBM_004", ]
+
+# Crear el gráfico usando ggplot2
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = kaggle_nor, color = "Ganancia_Kaggle")) +
+  geom_line(aes(y = test_nor, color = "Ganancia_Test")) +
+  labs(title = "Comparación de Kaggle y Test Normalizados (Experimento 4)",
+       x = "Corte",
+       y = "Valor Normalizado") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+```
+```{r}
+# Filtrar los datos para el Experimento 4
+ds_e <- ds[ds$experimento == "LGBM_005", ]
+
+# Crear el gráfico usando ggplot2
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = kaggle_nor, color = "Ganancia_Kaggle")) +
+  geom_line(aes(y = test_nor, color = "Ganancia_Test")) +
+  labs(title = "Comparación de Kaggle y Test Normalizados (Experimento 5)",
+       x = "Corte",
+       y = "Valor Normalizado") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+```
+
+
+
+```{r}
+# Filtrar los datos para el Experimento 6
+ds_e <- ds[ds$experimento == "LGBM_006", ]
+
+# Crear el gráfico usando ggplot2
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = kaggle_nor, color = "Ganancia_Kaggle")) +
+  geom_line(aes(y = test_nor, color = "Ganancia_Test")) +
+  labs(title = "Comparación de Kaggle y Test Normalizados (Experimento 6)",
+       x = "Corte",
+       y = "Valor Normalizado") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+```
+```{r}
+ggplot(ds, aes(x = kaggle, y = test, color = experimento)) +
+  geom_point() +
+  labs(title = "Scatter Plot de Ganancia Kaggle vs. Ganancia Test por Experimento",
+       x = "Ganancia Kaggle",
+       y = "Ganancia Test") +
+  theme_minimal()
+```
+```{r}
+ds_e <- ds[ds$experimento == "LGBM_005", ]
+media_ganancia_test <- mean(ds_e$test)
+
+ggplot(ds_e, aes(x = kaggle, y = test, color = corte,  label = corte)) +
+  geom_point() +
+  geom_hline(yintercept = media_ganancia_test, linetype = "dashed", color = "red") +
+  geom_text(hjust = 1.1, vjust = 0.5) +  # Ajustar la posición del texto
+
+  labs(title = "Scatter Plot de Ganancia Kaggle vs. Ganancia Test por Experimento",
+       x = "Ganancia Kaggle",
+       y = "Ganancia Test") +
+  theme_minimal()
+```
+```{r}
+indice_max_ganancia_kaggle <- which.max(ds$test)
+
+# Mostrar el registro con el máximo valor en Ganancia_Kaggle
+registro_max_ganancia_kaggle <- ds[indice_max_ganancia_kaggle, ]
+print(registro_max_ganancia_kaggle)
+```
+
