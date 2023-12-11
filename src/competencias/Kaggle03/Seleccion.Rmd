@@ -64,6 +64,31 @@ ggplot(ds, aes(x = corte, y = test_nor, color = experimento)) +
 # Filtrar los datos para el Experimento 1
 ds_e <- ds[ds$experimento == "LGBM_001", ]
 
+# Crear el gráfico usando ggplot2 (para ver ganancia en test)
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = test, color = "Ganancia_Test")) +
+  labs(title = "Ganancias Experimento 1",
+       x = "Corte",
+       y = "Ganancia") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+indice_max_ganancia_kaggle <- which.max(ds_e$test)
+
+# Mostrar el registro con el máximo valor en Ganancia_Kaggle
+registro_max_ganancia_kaggle <- ds_e[indice_max_ganancia_kaggle, ]
+print(registro_max_ganancia_kaggle)
+
+```
+
+
+
+```{r}
+# Filtrar los datos para el Experimento 4
+ds_e <- ds[ds$experimento == "LGBM_004", ]
+
 # Crear el gráfico usando ggplot2
 ggplot(ds_e, aes(x = corte, group = 1)) +
   geom_line(aes(y = kaggle_nor, color = "Ganancia_Kaggle")) +
@@ -77,6 +102,32 @@ ggplot(ds_e, aes(x = corte, group = 1)) +
 ds_e
 
 ```
+
+```{r}
+# Filtrar los datos para el Experimento 4
+ds_e <- ds[ds$experimento == "LGBM_004", ]
+
+# Crear el gráfico usando ggplot2 (para ver ganancia en test)
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = test, color = "Ganancia_Test")) +
+  labs(title = "Ganancias Experimento 4",
+       x = "Corte",
+       y = "Ganancia") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+indice_max_ganancia_kaggle <- which.max(ds_e$test)
+
+# Mostrar el registro con el máximo valor en Ganancia_Kaggle
+registro_max_ganancia_kaggle <- ds_e[indice_max_ganancia_kaggle, ]
+print(registro_max_ganancia_kaggle)
+
+```
+
+
+
 ```{r}
 # Filtrar los datos para el Experimento 4
 ds_e <- ds[ds$experimento == "LGBM_004", ]
@@ -95,7 +146,7 @@ ds_e
 
 ```
 ```{r}
-# Filtrar los datos para el Experimento 4
+# Filtrar los datos para el Experimento 5
 ds_e <- ds[ds$experimento == "LGBM_005", ]
 
 # Crear el gráfico usando ggplot2
@@ -109,6 +160,29 @@ ggplot(ds_e, aes(x = corte, group = 1)) +
   theme_minimal()
 
 ds_e
+
+```
+
+```{r}
+# Filtrar los datos para el Experimento 5
+ds_e <- ds[ds$experimento == "LGBM_005", ]
+
+# Crear el gráfico usando ggplot2 (para ver ganancia en test)
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = test, color = "Ganancia_Test")) +
+  labs(title = "Ganancias Experimento 5",
+       x = "Corte",
+       y = "Ganancia") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+indice_max_ganancia_kaggle <- which.max(ds_e$test)
+
+# Mostrar el registro con el máximo valor en Ganancia_Kaggle
+registro_max_ganancia_kaggle <- ds_e[indice_max_ganancia_kaggle, ]
+print(registro_max_ganancia_kaggle)
 
 ```
 
@@ -131,6 +205,29 @@ ggplot(ds_e, aes(x = corte, group = 1)) +
 ds_e
 
 ```
+```{r}
+# Filtrar los datos para el Experimento 6
+ds_e <- ds[ds$experimento == "LGBM_006", ]
+
+# Crear el gráfico usando ggplot2 (para ver ganancia en test)
+ggplot(ds_e, aes(x = corte, group = 1)) +
+  geom_line(aes(y = test, color = "Ganancia_Test")) +
+  labs(title = "Ganancias Experimento 6",
+       x = "Corte",
+       y = "Ganancia") +
+  scale_color_manual(values = c("Ganancia_Kaggle" = "blue", "Ganancia_Test" = "red")) +
+  theme_minimal()
+
+ds_e
+
+indice_max_ganancia_kaggle <- which.max(ds_e$test)
+
+# Mostrar el registro con el máximo valor en Ganancia_Kaggle
+registro_max_ganancia_kaggle <- ds_e[indice_max_ganancia_kaggle, ]
+print(registro_max_ganancia_kaggle)
+
+```
+
 ```{r}
 ggplot(ds, aes(x = kaggle, y = test, color = experimento)) +
   geom_point() +

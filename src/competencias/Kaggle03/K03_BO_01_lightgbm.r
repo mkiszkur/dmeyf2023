@@ -41,7 +41,6 @@ PARAM$input$training <- c(201907, 201908, 201909, 201910, 201911, 201912,
                           202001, 202002, 202003, 202004, 202005, 202006, 
                           202007, 202008, 202009, 202010, 202011, 202012, 
                           202101, 202102, 202103, 202104, 202105, 202106)
-#PARAM$input$training <- c(202105)
 
 PARAM$input$future <- c(202107) # meses donde se aplica el modelo
 PARAM$input$kaggle <- c(202109) # meses donde se aplica el modelo
